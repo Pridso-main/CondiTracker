@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CondiTracker - Administration</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">🛠️ Espace Opérateur</div>
+        <div class="menu-right">
+            <a href="index.html" class="btn-back">Retour au Site</a>
+            <button id="btn-logout" class="btn-login" style="display:none; background-color: #e74c3c;">Déconnexion</button>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div id="login-view" class="login-container">
+            <h2>Authentification Requise</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Identifiant</label>
+                    <input type="text" id="username" placeholder="Ex: admin" required>
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn-submit">Se Connecter</button>
+                <p id="login-error" class="error-msg"></p>
+            </form>
+        </div>
+
+        <div id="dashboard-view" style="display: none;">
+            
+            <h2 class="dashboard-title">Supervision du Parc</h2>
+
+            <div class="dashboard-grid">
+                
+                <div class="status-panel">
+                    <h3>État des Stations</h3>
+                    <div id="stations-list">
+                        <p>Chargement...</p>
+                    </div>
+                </div>
+
+                <div class="logs-panel">
+                    <h3>Logs du Serveur</h3>
+                    <div class="logs-container-scroll">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Heure</th>
+                                    <th>Niveau</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logs-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="assets/admin.js"></script>
+
+</body>
+</html>

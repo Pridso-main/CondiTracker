@@ -1,0 +1,53 @@
+Protocole d'échange Arduino/JAVA :
+
+Initialisations (handshake) :
+
+la station Arduino envoie au serveur java son Identifiant de station pour savoir de quelle station on parle (ID ici "01" pour la présentation). Mais aussi l'état de la station pour vérifier son bon fonctionnement si les capteur marche par exemple et remonter les problème facilement. 
+
+Exemple de la trame en phase d'initialisation/Synchronisation :
+
+<SYN;ID:01;STA:UP>
+(Tout vas bien dans le meilleur des mondes)
+
+<SYN;ID:01;STA:ERR_...> 
+(Pour facilité la maintenances et le suivie des stations dans les logs)
+Ce cas apparait si un des capteur est défaillant ou un problème a besoin d'être remonté.
+{On pourrait meme envisagé de faire remonté les erreurs dans le code Arduino}
+
+Réponses possible du serveur Java :
+
+<ACK;ID:01;MODE:Push;FREQ:3600000> 
+(Dans ce cas là, la station passe en mode Périodique (ici Message tout les heurs))
+
+	Donc tout les heurs il envoi une trame : <REP;ID:01;TEMP:20,5;HUM:64;....>
+	- Si un problème l'en empêche il renvoi l'erreur sous le format suivant :
+		<REP;ID:01;STA:ERR_...>
+
+<ACK;ID:01;MODE:Pull>
+(Dans ce cas là, la station passe en mode Guidé (Attente de Requête Serveur)
+
+	- L'Arduino reçoit : <REQ;ID:01>
+	- Il lit ses capteurs
+	- Il Répond : <REP;ID:01;TEMP:20.5;HUM:64;....>
+	- Si un problème l'en empêche il renvoi l'erreur sous le format suivant :
+		<REP;ID:01;STA:ERR_...>
+
+
+<NACK;ID:01>
+(Dans ce cas là, la station reste dans la phase d'initialisation et continue les trame d'initialisation)
+
+Tout en permanence tant quelle ne reçoit pas de Acknowledge avec le mode Push/Pull.
+
+
+Acronyme :
+SYN : Synchronisation
+ACK : Acknowledge (Acquitté)
+NACK : No Acknowledge (Non Acquitté)
+REQ : Requête
+REP : Réponse
+TEMP : Température
+HUM : Humidité
+LUM : Luminosité
+PLU : Pluie
+STA : State (Etat)
+FREQ : Fréquence

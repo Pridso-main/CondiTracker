@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CondiTracker - Météo Grimpe</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">🧗‍♂️ CondiTracker</div>
+        
+        <div class="station-selector">
+            <select id="station-select">
+                <option value="" selected disabled>-- Choisir un site d'escalade --</option>
+                <option value="1">Station 01 (Principale)</option>
+                <option value="2">Station 02 (Simulée)</option>
+            </select>
+        </div>
+
+        <div class="menu-right">
+            <a href="admin.html" class="btn-login">Connexion Opérateur</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <div class="note-banner" id="banner-bg">
+            <h2>Note Météo Actuelle</h2>
+            <div class="note-value">
+                <span id="note-display">--</span>/10
+            </div>
+            <p class="note-message" id="message-display">Chargement des données...</p>
+            <p class="last-update">Dernière mise à jour : <span id="date-display">--:--</span></p>
+        </div>
+
+        <div class="cards-container">
+            
+            <div class="card">
+                <div class="icon">🌡️</div>
+                <h3>Température</h3>
+                <div class="value"><span id="temp-display">--</span> °C</div>
+            </div>
+
+            <div class="card">
+                <div class="icon">💧</div>
+                <h3>Humidité</h3>
+                <div class="value"><span id="hum-display">--</span> %</div>
+            </div>
+
+            <div class="card">
+                <div class="icon">☀️</div>
+                <h3>Luminosité</h3>
+                <div class="value"><span id="lum-display">--</span> Lux</div>
+            </div>
+
+        </div>
+
+        <div class="history-container">
+            <h3>Historique des dernières relevés</h3>
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Heure</th>
+                        <th>Temp. (°C)</th>
+                        <th>Hum. (%)</th>
+                        <th>Lum. (Lux)</th>
+                    </tr>
+                </thead>
+                <tbody id="history-body">
+                    </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="assets/app.js"></script>
+
+</body>
+</html>

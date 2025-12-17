@@ -1,0 +1,13 @@
+/conditracker
+│
+├── /assets
+│   ├── /css          # Styles (style.css)
+│   ├── /js           # Scripts (app.js, chart.js pour les graphiques)
+│   └── /img          # Logos, icones
+│
+├── /api
+│   └── api.php       # Le "Cerveau" : Reçoit les requêtes JS et interroge la BDD
+│
+├── index.html        # La vue "Grimpeur" (Maquette IHM 1)
+├── admin.html        # La vue "Opérateur" (Maquette IHM 2)
+└── db_connect.php    # Fichier de configuration de connexion MySQL
