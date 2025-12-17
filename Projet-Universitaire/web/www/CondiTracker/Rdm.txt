@@ -1,8 +1,8 @@
 /conditracker
 │
 ├── /assets
-│   ├── /css          # Styles (style.css)
-│   ├── /js           # Scripts (app.js, chart.js pour les graphiques)
+│   ├── /css          # Styles 
+│   ├── /js           # Scripts 
 │   └── /img          # Logos, icones
 │
 ├── /api
