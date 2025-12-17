@@ -1,0 +1,8 @@
+# Ignorer les fichiers compilés Java
+bin/
+*.class
+*.jar
+
+# Ignorer les fichiers temporaires système
+.DS_Store
+Thumbs.db
