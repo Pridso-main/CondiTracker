@@ -58,7 +58,6 @@ Aucun système local et accessible au public ne fournit actuellement ces donnée
 ## 5. Besoins et Exigences
 
 ![Diagramme des cas d’utilisation](img/use_case_diagram.png)
-*(Insérer ici ton diagramme de cas d'utilisation)*
 
 ### 5.1. Exigences Fonctionnelles (EF)
 Ce sont les fonctionnalités que le système doit fournir.
