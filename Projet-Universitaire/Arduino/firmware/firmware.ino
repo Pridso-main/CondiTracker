@@ -16,7 +16,7 @@
 #define PIN_LUM 4       // Capteur Luminosité (Digital 4)
 
 // --- IDENTITE ---
-const String STATION_ID = "01"; 
+const String STATION_ID = "03"; 
 
 // --- OBJETS ---
 DHT dht(DHTPIN, DHTTYPE);

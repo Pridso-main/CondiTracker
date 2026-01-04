@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 require_once 'db_connect.php';
 
 // Récupération de l'ID (défaut 1)
-$id_station = isset($_GET['id']) ? intval($_GET['id']) : 1;
+$id_station = isset($_GET['id']) ? $_GET['id'] : '01';
 
 $response = ["status" => "error", "message" => "Pas de données"];
 

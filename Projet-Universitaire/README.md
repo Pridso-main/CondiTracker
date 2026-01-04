@@ -1,6 +1,6 @@
 # 🧗 CondiTracker
 
-> **IoT Weather Station for Climbers** > *Projet Universitaire (SAE 33) évoluant vers une solution professionnelle.*
+> **IoT Weather Station for Climbers** > *Projet Universitaire (SAE 33)*
 
 ## 📖 À propos
 
@@ -39,15 +39,13 @@ Importer le script `database/schema.sql` dans MariaDB pour créer la base `condi
 User: `condi_user` / Pass: `condi`[cite: 66].
 
 ### 2. Station Météo
-Téléverser le code `arduino/firmware/Arduino_MachineETAT.ino` sur l'Arduino Uno connectée en USB.
+Téléverser le code `arduino/firmware/firmware` sur l'Arduino Uno connectée en USB.
 
 ### 3. Serveur Métier
 Lancer l'application Java `server/src/ServeurMetier.java`. Il détectera automatiquement le port COM et initiera le Handshake `<SYN>`[cite: 94].
 
 ### 4. Interface Web
 Placer le contenu du dossier `web/` dans le répertoire `www` de Wamp. Accéder via `http://localhost/conditracker`.
-
-## 🔮 Roadmap (Futur)
 
 
 ## 👤 Auteur
