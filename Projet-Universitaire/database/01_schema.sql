@@ -11,11 +11,11 @@ CREATE DATABASE IF NOT EXISTS `conditracker` CHARACTER SET utf8mb4 COLLATE utf8m
 USE `conditracker`;
 
 -- 2. Table : Utilisateurs (Opérateurs)
--- Sécurisation : mot_de_passe_hash stockera le hash (MD5 pour l'instant, évolutif vers Bcrypt)
+-- Sécurisation : mot_de_passe stockera le hash (MD5 pour l'instant, évolutif vers Bcrypt)
 CREATE TABLE IF NOT EXISTS `utilisateurs` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `identifiant` VARCHAR(50) NOT NULL UNIQUE,
-    `mot_de_passe_hash` VARCHAR(255) NOT NULL,
+    `mot_de_passe` VARCHAR(255) NOT NULL,
     `role` ENUM('ADMIN', 'OPERATEUR') DEFAULT 'OPERATEUR',
     `date_creation` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
