@@ -1,74 +1,92 @@
 <?php
 // Fichier : api/admin_api.php
 header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *"); // Utile pour éviter les blocages locaux
 require_once 'db_connect.php';
 
-// On regarde quelle action est demandée (login ou getData)
-$action = $_GET['action'] ?? '';
-$response = ["status" => "error", "message" => "Action inconnue"];
+// Récupération des données JSON (envoyées par le fetch JS)
+$inputJSON = file_get_contents('php://input');
+$input = json_decode($inputJSON, true);
+
+// Détermine l'action (soit via URL pour getData, soit via JSON pour login)
+$action = $_GET['action'] ?? ($input['action'] ?? '');
+
+$response = ["success" => false, "message" => "Action inconnue"];
 
 try {
 
-    // --- CAS 1 : TENTATIVE DE CONNEXION ---
+    // --- CAS 1 : CONNEXION (LOGIN) ---
     if ($action === 'login') {
-        // On récupère les données envoyées par le formulaire JS
-        $input = json_decode(file_get_contents('php://input'), true);
-        $user = $input['username'] ?? '';
-        $pass = $input['password'] ?? '';
+        // On récupère identifiant et mot de passe envoyés par le JS
+        // Attention : on utilise les mêmes noms que dans la BDD pour ne pas se perdre
+        $user = $input['identifiant'] ?? '';
+        $pass = $input['mot_de_passe'] ?? '';
 
-        // Requête sécurisée pour vérifier le mot de passe
-        // Note : On utilise MD5 car on l'a défini comme ça dans le script SQL précédent
-        $sql = "SELECT id, identifiant FROM utilisateurs WHERE identifiant = :u AND mot_de_passe = MD5(:p)";
+        // REQUÊTE VERSION "EN CLAIR" (Sans MD5)
+        // On vérifie que l'identifiant ET le mot de passe correspondent exactement
+        $sql = "SELECT * FROM utilisateurs WHERE identifiant = :u AND mot_de_passe = :p";
+        
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['u' => $user, 'p' => $pass]);
-        $admin = $stmt->fetch();
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($admin) {
-            $response = ["status" => "success", "message" => "Connexion OK"];
+            $response = [
+                "success" => true, 
+                "message" => "Connexion réussie",
+                "role" => $admin['role'] // On renvoie le rôle (ADMIN ou OPERATEUR)
+            ];
         } else {
-            $response = ["status" => "error", "message" => "Identifiant ou mot de passe incorrect"];
+            $response = [
+                "success" => false, 
+                "message" => "Identifiant ou mot de passe incorrect"
+            ];
         }
     }
 
-    // --- CAS 2 : RÉCUPÉRATION DES DONNÉES DASHBOARD ---
+    // --- CAS 2 : TABLEAU DE BORD (GETDATA) ---
     elseif ($action === 'getData') {
         
         // A. Récupérer les LOGS
+        // On prend les 20 derniers logs système
         $sqlLogs = "SELECT * FROM logs_systeme ORDER BY date_heure DESC LIMIT 20";
-        $logs = $pdo->query($sqlLogs)->fetchAll();
+        $stmtLogs = $pdo->query($sqlLogs);
+        $logs = $stmtLogs->fetchAll(PDO::FETCH_ASSOC);
 
-        // B. Récupérer l'ÉTAT DES STATIONS (Dernière fois vue)
-        // On regarde la dernière mesure pour chaque station
-        $sqlStatus = "SELECT station_id, MAX(date_heure) as derniere_vue FROM mesures GROUP BY station_id";
-        $stations = $pdo->query($sqlStatus)->fetchAll();
+        // B. Récupérer l'ÉTAT DES STATIONS
+        // On utilise la nouvelle table 'stations' qui contient déjà l'état (EN_LIGNE/HORS_LIGNE)
+        // C'est beaucoup plus simple qu'avant !
+        $sqlStations = "SELECT id, nom, localisation, etat, derniere_synchro FROM stations";
+        $stmtStations = $pdo->query($sqlStations);
+        $stations = $stmtStations->fetchAll(PDO::FETCH_ASSOC);
 
-        $stationsStatus = [];
+        // Formatage pour le frontend (pour que le JS comprenne bien)
+        $stationsFormatted = [];
         foreach($stations as $s) {
-            // Calcul si en ligne (Si la dernière mesure date de moins de 10 min)
-            $lastSeen = strtotime($s['derniere_vue']);
-            $now = time();
-            $diffMinutes = ($now - $lastSeen) / 60;
-            
-            $isOnline = ($diffMinutes < 10); // Moins de 10 min = En ligne
-
-            $stationsStatus[] = [
-                "id" => $s['station_id'],
-                "last_seen" => $s['derniere_vue'],
-                "online" => $isOnline
+            $stationsFormatted[] = [
+                "id" => $s['id'],
+                "nom" => $s['nom'],
+                "last_seen" => $s['derniere_synchro'],
+                // Le JS attend un booléen 'online' pour afficher la pastille verte/rouge
+                "online" => ($s['etat'] === 'EN_LIGNE') 
             ];
         }
 
         $response = [
-            "status" => "success",
+            "success" => true,
             "data" => [
                 "logs" => $logs,
-                "stations" => $stationsStatus
+                "stations" => $stationsFormatted
             ]
         ];
     }
 
 } catch(PDOException $e) {
-    $response["message"] = "Erreur SQL : " . $e->getMessage();
+    // En cas d'erreur technique (BDD coupée, etc.)
+    $response = [
+        "success" => false, 
+        "message" => "Erreur SQL : " . $e->getMessage()
+    ];
 }
 
 echo json_encode($response);
